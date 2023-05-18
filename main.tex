@@ -42,70 +42,80 @@ Word count:
 
 \section{Problem formulation}
 
-We have inherited a legacy system called Minitwit and have been tasked with refactoring it. Besides modernizing the stack it has been our aim to do so using DevOps methodologies. By reflecting on select few pillars of DevOps the main question becomes whether or not we achieved this goal. Is what we've achieved DevOps?
+We have inherited a legacy system called Minitwit and have been tasked with refactoring it. Besides modernizing the stack it has been our aim to do so using DevOps methodologies. By reflecting on select few pillars of DevOps the final question becomes whether or not we achieved this goal. Is what we've done DevOps?
 
 \section{System's Perspective} 
 
-\subsection{Design and architecture of the system (Mads)}
+\subsection{Design and architecture of the system}
 
-Minitwit uses a container-based architecture where each service runs in its own Docker container. The backend is built using the Python FastAPI framework and Redis, while Jinja is used for the frontend. Grafana and Prometheus are utilized for monitoring, the EFK stack for logging, and PostgreSQL serves as the database. This approach enables better isolation and scalability of the different components of the application.
+Minitwit uses a container-based architecture where each service runs in its own Docker container. The backend is built with FastAPI and Jinja. Grafana and Prometheus are utilized for monitoring, the EFK stack for logging, Redis\footnote{Redis is only used to store the number of total http calls since FastAPI is a multi-threaded server that doesn't allow for global state} and PostgreSQL serve as database.
 
-In addition to the architectural components of our system, we have also created a deployment view to help illustrate how these components are deployed and interact with each other in a production environment, see figure \ref{fig:deployment_view}. 
+The deployment view below is to help illustrate how these components are deployed and interact with each other in a production environment, see figure \ref{fig:deployment_view}. 
 
 \begin{figure}[h]
-\includegraphics[width=0.9\textwidth]{images/Deployment_View_Picture.png}
+\includegraphics[width=1\textwidth]{images/Deployment_View_Picture.png}
 \label{fig:deployment_view}
 \caption{Minitwit deployment view}
 \centering
 \end{figure}
-
+\newpage
 \subsection{Dependencies of the system (Mikkel)}
-We list and briefly describe all technologies and tools we've applied and depend on:
-\begin{itemize}
-    \item Python and FastAPI for building the backend web-application.
-    \item Jinja for displaying the frontend.
-    \item PostgreSQL as database system.
-    \item Docker for containerization.
-    \item Vagrant for managing creation of virtual environments.
-    \item DigitalOcean for hosting virtual environments on a remote server.
-    \item GitHub Actions and Ansible for the CI/CD chain.
-    \item SQLAlchemy as an ORM framework.
-    \item Prometheus and Grafana for monitoring and visualising the state of the system.
-    \item Postman for testing of the API.
-    \item Elasticsearch, Filebeat and Kibana as a logging stack.
-    \item Redis for storing state without hard consistency requirements (eg. total page views)
-    \item Nginx and Heartbeat for a high-availablity setup with a staging and deployment server.
-    \item Certbot for adding HTTPS to the website.
-\end{itemize}
-Arguments of our choices of technologies and tools used is provided in the respective sections of the report describing their usage in detail.
+
+\begin{figure}[h]
+\includegraphics[width=0.9\textwidth]{images/Technologies and tools.jpg}
+\centering
+\end{figure}
+
+% Technologies and tools:
+% \begin{itemize}
+%     \item FastAPI for the backend.
+%     \item PostgreSQL as database system.
+%     \item SQLAlchemy as an ORM framework.
+%     \item Docker for containerization.
+%     \item Vagrant for managing creation of virtual environments.
+%     \item DigitalOcean for hosting virtual environments on a remote server.
+%     \item GitHub Actions and Ansible for the CI/CD chain.
+%     \item Prometheus and Grafana for monitoring and visualising the state of the system.
+%     \item Postman for testing of the API.
+%     \item Elasticsearch, Filebeat and Kibana as a logging stack.
+%     \item Redis for storing global state.
+%     \item Nginx and Heartbeat for a high-availablity setup with a staging and deployment server.
+%     \item Certbot for adding HTTPS to the website.
+% \end{itemize}
+
+% Languages:
+% \begin{itemize}
+%     \item Python for the web application.
+%     \item Jinja as a templating language.
+%     \item Dockerfile.
+%     \item YAML for Docker, Ansible and Github Actions
+% \end{itemize}
 
 \subsection{Subsystem interactions}
 
-Important interactions of subsystems
-
 \subsection{State of the system (Mikkel)}
-We have followed practices of software quality like testing, pair programming, code reviews and linting. To measure maintainability we have used Code Climate.
 
-This allows accessing the state of the system whenever it is updated.
+The application is accessible on \url{opsdev.gg}. The code can be found in \href{https://github.com/MinitwitGroupI/MiniTwit}{this repository}. Everything is running without error and will be accessible until the date TODO.
+Our system has been able to process XXXX \footnote{SOURCE TODO} amount of events in the span of XXXX TODO weeks.
 
 \subsection{Licences}
-Finally, describe briefly, if the license that you have chosen for your project is actually compatible with the licenses of all your direct dependencies.
 
-FOUND ON README.MD
+Since profiteering is not our purpose the code is under the \href{https://github.com/MinitwitGroupI/MiniTwit/blob/main/LICENSE}{MIT License}.
 
 \subsection{Weekly tasks (All) }
 
 
 \subsubsection{Week 1 - Bug fixing the old program}
+
 By importing the project to IntelliJ it auto-suggested to update the Python version from 2 to 3. We used shellcheck to lint the bash script.
 
 \subsubsection{Week 2 - Refactoring the app in another language }
 
-We listed possible frameworks, voted to exclude and then used a roulette to pick FastAPI. The process is described here \footnote{\url{https://docs.google.com/document/d/1EOrFKD0XFW5gxv1NycgtTuj9rO6dggau99LybLYIRq0/edit#heading=h.r8lyr8ciz36h }}. 
+We listed possible frameworks, voted to exclude and then used a roulette to pick between two. The process is described here \footnote{\url{https://docs.google.com/document/d/1EOrFKD0XFW5gxv1NycgtTuj9rO6dggau99LybLYIRq0/edit\#heading=h.r8lyr8ciz36h }}. 
 
 The arguments for FastAPI is how we could reuse the existing python code base and even reuse Jinja. Besides the ease of refactoring it was also familiar to some of us. 
 
-We experienced some unexpected downsides.
+We experienced some unexpected downsides:
 \begin{itemize}
 
     \item The implementation of redirection for instance redirecting from a POST to another POST request would mean the loss of the original body and no way to pass it along. 
@@ -124,62 +134,66 @@ Github Actions gave us a simple configuration process without needing additional
 
 \subsubsection{Week 5 - ORM }
 
-Three ORMs have been considered and the arguments are mapped \footnote{\url{https://docs.google.com/document/d/1EOrFKD0XFW5gxv1NycgtTuj9rO6dggau99LybLYIRq0/edit#heading=h.auxry4rgtrx1}. A benchmarks repository was created \footnote{\url{https://github.com/MinitwitGroupI/ORM_Benchmarks }} and after a Github Discussion \footnote{\url{https://github.com/MinitwitGroupI/MiniTwit/discussions/57 }} a vote was held. The choice fell on the most popular choice for Python - SQLAlchemy - and it did not cause regret. 
+Three ORMs have been considered and the arguments are mapped \footnote{\url{https://docs.google.com/document/d/1EOrFKD0XFW5gxv1NycgtTuj9rO6dggau99LybLYIRq0/edit\#heading=h.auxry4rgtrx1}}. A benchmarks repository was created \footnote{\url{https://github.com/MinitwitGroupI/ORM_Benchmarks }} and after a Github Discussion \footnote{\url{https://github.com/MinitwitGroupI/MiniTwit/discussions/57 }} a vote was held. The choice fell on the most popular choice for Python - SQLAlchemy - and it did not cause regret. 
 
 \subsubsection{Week 6 - Monitoring }
-Prometheus with Grafana is the most popular choice \footnote{https://stackshare.io/stackups/grafana-vs-nagios}. 
+
+Prometheus with Grafana is considered the most popular choice in the industry \footnote{https://stackshare.io/stackups/grafana-vs-nagios}. 
 
 We checked our partner groups website and created issues for known issues \footnote{\url{https://github.com/organizationGB/DevOps/issues/23}} \footnote{\url{https://github.com/organizationGB/DevOps/issues/25}}. 
 
 
-
 \subsubsection{Week 7 - Maintainability, external code analysing }
 
-The Flake8 linter in our CI pipeline provides soft feedback that would not block builds but hint at potential problems. SonarQube and CodeClimate integrated perfectly with our repository but gave vastly different views on code quality than us. It required manually dismissing a lot of warnings about duplicated code which existed in our unit tests. It ended up being a burden rather than helpful.   
-
+The Flake8 linter that pylint uses does static code analysis in our CI pipeline to provide soft feedback that does not block builds but hint at potential problems. SonarQube and CodeClimate integrated perfectly with our repository but gave vastly different views on code quality than us. It required manually dismissing a lot of warnings about duplicated code which existed in our unit tests. It ended up being a burden rather than helpful.
 
 \subsubsection{Week 8 - EFK stack}
 
-Significant issues were encountered when setting up EFK stack.
+Significant issues were encountered when setting up the EFK stack:
+
 \begin{itemize}
-    \item Poor support for creating custom user credentials.
+    \item Poor support for creating custom user credentials for WHAT?.
     \item User credentials on Filebeat had to be manually hard coded.
-    \item Deployment from localhost to production caused unexpected issues. Security features needed to be enabled for elastic search, filebeat and kibana. 
-    \item EFK stack data flow was not set up properly in the example. Versions of EFK stack needed to be readjusted.
+    \item With regards to security it was difficult to enable for each service and could only be tested in production given our setup. 
+    \item Adjustment of versions were required from the provided guide. 
 \end{itemize}
 
-Postmortem exercises was completed. A bug was introduced an it was discovered with the help of logging.
+Postmortem exercises was completed. A bug was introduced an it was discovered with the help of logging. link?
 
 \subsubsection{Week 9 - Security  assessment}
-In order to asses the security of the program the team utilised "Metasploit", "OWASP ZAP" to detect any potential vulnerabilities inside the currently running application. This resulted in minor vulnerabilities related to HTML being discovered which were address in a later week.
 
-In addition, the team debated on integrating "OWASP ZAP" in the CI/CD pipeline in order to asses if any future code would cause vulnerabilities. However, decided against it as it was not part of the assignment.
+Metasploit and OWASP ZAP scans revealed minor vulnerabilities in the frontend. WHAT WERE THEY???
 
-Lastly, we performed a security assessment on another group : 
+The idea of integrating OWASP ZAP to the CI/CD pipeline was considered but dismissed on grounds of being beyond the scope.
+
+A security assessment was performed on our partner group \label{appendix:security assessment}. 
+
 
 \subsubsection{Week 10 - Scaling and rolling out updates }
+
 We opted to go with the high-availability setup, since using a scalable deployment would require refactoring several components of our stack.
+
 We already implemented deployments to a staging environment prior to production, so adding the staging server to our high-availability setup also provided us with rolling updates.  
 
 \subsubsection{Week 12 - Encode your infrastructure setup }
 
-Terraform did not provide additional benefits than our existing IaC with Vagrant. It worked for both provisioning and configuration management. Refactoring it into Terraform would require an almost 1:1 mapping of all functionalities along with extra configuration details (state).
+Changing our existing IaC from Vagrant to Terraform did not provide any perceived benefits. Vagrant works for both provisioning and configuration management. Besides the lack of benefits the downside of Terraform is having to deal with state. 
 
 \section{Process' perspective} \label{cicd}
 
 \subsection{Team Organisation and Developer interaction (Ivar)} 
 
-It was a goal to limit the number of tools.
+Since creating the Github organisation \href{https://github.com/MinitwitGroupI/}{MinitwitGroupI} team interaction was centered around Github and Discord. Discord was used for informal chatter and to contact each other. For tasks and discussions Github issues were used. This gave us a Project View with a visual Kanban \footnote{\url{https://github.com/orgs/MinitwitGroupI/projects/1}}. A higher use of Github as a communication platform was observed as time progressed. 
 
-Our team tried to employ as little various tools and methodologies as possible to streamline the organization of tasks and responsibilities. The only such tool was the Github issues functionality, which was particularly useful due to its integration with our codebase and its compatibility with a Kanban-style board visualization.
-
-We strived to ensure that everyone worked on every aspect of the project, promoting a well-rounded understanding of each component. However, certain sections of the project were more esoteric and hacky, making it challenging for everyone to fully grasp the intricacies of every component. Despite this, our team's overall familiarity with each aspect of the project was satisfactory, and everyone contributed to most components.
+We strived to ensure that everyone worked on every aspect of the project, promoting a well-rounded understanding of each component. However, certain sections of the project were more esoteric and hacky, making it challenging for everyone to fully grasp the intricacies of every component. 
 
 
 \subsection{Stages and tools utilized in CI/CD chains (Ivar)}
-Our team chose to use Github Actions as the primary CI/CD tool, as it is seamlessly integrated with our codebase on Github. This integration enables us to easily automate the process of building, testing and deploying our application with every commit on every pull request.
+
+Github Actions seamlessly integrated with our codebase. This integration enables us to easily automate the process of building, testing and deploying our application with every commit on every pull request.
 
 \subsubsection{Continuous Integration (CI)}
+
 Upon each commit, Github Actions triggers a job that builds our application using Docker. This process creates a Docker image, which is then used as the environment for running our custom unit and integration tests.
 
 For a pull request to be merged, it must successfully pass all unit and integration tests.
@@ -189,13 +203,14 @@ For a pull request to be merged, it must successfully pass all unit and integrat
 Once a pull request has been merged with our main branch, our CD pipeline is automatically triggered. 
 The first step in this pipeline is pushing the new versions our custom Docker images to our image repository. 
 
-Then, using Ansible, we first deploy our entire application stack to a staging server. This environment allows us to verify the functionality and stability of our application before deploying it to production.
+Using Ansible, we first deploy our entire application stack to a staging server. This environment allows us to verify the functionality and stability of our application before deploying it to production.
 
 After successful deployment to the staging server, we run liveness tests using Postman. These tests are designed to validate the overall health and performance of our application, ensuring that it meets the necessary requirements for production deployment.
 
-If our application successfully passes the liveness tests, it is then deployed to our production server.
+A passing liveness test is required to deploy to our production server. 
 
 \subsection{Organization of the repository}
+
 \url{https://github.com/MinitwitGroupI/MiniTwit/blob/main/docs/CONTRIBUTE.md}
 That is, either the structure of of mono-repository or organization of artifacts across repositories.
 In essence, it has to be be clear what is stored where and why.
@@ -217,9 +232,14 @@ For logging we use the EFK stack. The Elasticsearch dashboard can be found on \u
 
 \subsection{Security Assessment}
 
-In the security assessment we used "Metasploit" and "OWASP ZAP" in order to asses our security capabilities. However, all attacks failed to produce any significant results. 
-In addition, another team  attempted to exploit the website but also did not produce any note worthy results. 
-Lastly, the team asses the security capabilities of another team. This has results that resulted in the other teams database and cookies being compromised.
+\begin{itemize}
+    \item All attacks with Metasploit and OWASP ZAP failed to produce any significant results on our website. 
+    \item The peer team  attempted to exploit the website but also did not produce any note worthy results. 
+    \item Reviewing the peer team resulted in the other teams database and cookies being compromised. We go into depth in the appendix \label{appendix:security assessment}.
+
+\end{itemize}
+
+
  
 
 \subsection{Scaling and Load balancing (Anders)}
@@ -280,7 +300,7 @@ DevOps has enjoyed many different views through different eras \cite{devopsviews
 
 Psychological safety: (Explain how we were at odds in the beginning when selecting a framework). 
 
-"The Bus Factor" as repeated during the guest lecture which is the concept that no single developer should become key to development or infrastructure to the degree that progress can't occur without them. We failed in this regard. We each carved out our niche based on previous knowledge. While PR reviews occurred there was insufficient knowledge sharing for role shifting. 
+"The Bus Factor" was repeated during the guest lecture which is the concept that no single developer should become key to development or infrastructure to the degree that progress can't occur without them. We failed in this regard. We each carved out our niche based on previous knowledge. While PR reviews occurred there was insufficient knowledge sharing for role shifting. 
 
 \subsubsection{Ways we are not DevOps}
 
@@ -338,6 +358,15 @@ Terms we could use: SDLC, Technical debt
 \subsection{Reflection (All)}
 
 Also reflect and describe what was the "DevOps" style of your work. For example, what did you do differently to previous development projects and how did it work?
+
+
+\subsubsection{THE SECTION BELOW IS JUST FOR NOTING DOWN REFLECTIONS, NEEDS TO BE REWRITTEN}
+\begin{itemize}
+    \item Our branch strategy of having to review each others PRs for knowledge sharing and keeping a high code quality quickly became somewhat useless as we worked on a lot of new technologies with no prior experience, so it was hard to tell if something was inaccurate. 
+    \item Optimally we should have a test environment as well as an production environment, as some changes were hard to test locally and we just pushed strait to production and sometimes caused the application to go down.
+    \item We waited until the CI lecture to fully implement testing, meaning that all our deployments were based on educated guesses, meaning that things which worked locally often failed in production. Additionally, we also didn't have CD until the same period, which resulted in weekly releases that failed most of the time. That required us to go through all changes made since the last release and bugfixing them.
+\end{itemize}
+ 
 
 \subsection{Hand over}
 
