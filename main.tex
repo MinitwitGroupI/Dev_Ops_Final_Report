@@ -50,7 +50,15 @@ We have inherited a legacy system called Minitwit and have been tasked with refa
 
 Minitwit uses a container-based architecture where each service runs in its own Docker container. The web application is built with FastAPI and Jinja. Grafana and Prometheus are utilized for monitoring, the EFK stack for logging, Redis and PostgreSQL serve as database.
 
-A deployment view was created to help illustrate how these components are deployed and interact with each other in a production environment, see appendix \ref{appendix:DeploymentView}. 
+A deployment view was created to help illustrate how these components are deployed and interact with each other in a production environment.
+
+\begin{figure}[h]
+    \includegraphics[width=1\textwidth]{images/DeploymentView2.0.jpg}
+    \label{fig:ci_pipeline}
+    \centering
+    \caption{Component Diagram}
+\end{figure}
+
 
 \subsection{Dependencies of the system}
 
@@ -83,7 +91,7 @@ Languages:
 \begin{itemize}
     \item Python for the web application.
     \item Jinja as a templating language.
-    \item Dockerfile.
+    \item Text for creating the Dockerfile.
     \item YAML for Docker, Ansible and Github Actions
 \end{itemize}
 
@@ -105,14 +113,14 @@ By importing the project to IntelliJ it auto-suggested to update the Python vers
 
 \subsubsection{Week 2 - Refactoring the app in another language }
 
-We listed possible frameworks, voted to exclude and then used a roulette to pick between two. The process is described here \footnote{\url{https://docs.google.com/document/d/1EOrFKD0XFW5gxv1NycgtTuj9rO6dggau99LybLYIRq0/edit\#heading=h.r8lyr8ciz36h }}. 
+We did two rounds of voting. Initially we listed all possible frameworks we wished to work with and then voted on which frameworks should be eliminated until we had 2 finalists and then used a roulette to pick between the two. The process is described here \footnote{\url{https://docs.google.com/document/d/1EOrFKD0XFW5gxv1NycgtTuj9rO6dggau99LybLYIRq0/edit\#heading=h.r8lyr8ciz36h }}. 
 
 Fast API was chosen due to general familiarity with the framework, allowing the team to reuse Jinja and low amount of change needed to port the application to the framework. We could even reuse the Jinja templates. This would let us focus on the DevOps tasks rather than web development. 
 
 We experienced some unexpected downsides to FastAPI:
 \begin{itemize}
     \item The implementation of redirection for redirecting from a POST to another POST request would mean the loss of the original body and no way to pass it along. 
-    \item Redirecting between different routes that return different status codes was also an unexpected challenge. 
+    \item Redirecting between different routes would return different status codes which created an unexpected challenge.
     \item Since it is multi-threaded server it excludes the ability to have a global state and a session. We solved it with Starlette Session but still caused limitations in regards to combining it with middleware.
     \item The tests required to be translated to Starlette framework in order to be utilised.
 \end{itemize}
@@ -121,7 +129,7 @@ We experienced some unexpected downsides to FastAPI:
 
 We created a single Dockerfile and set up Docker Compose. The old application was written for the Ubuntu 12.04 operating system, so for our deployment target we chose a DigitalOcean virtual machine using Ubuntu 22.04. DigitalOcean was chosen for it's ease of configuration and free student credits.
 
-Initially, a new Docker feature called Dev Environments was used but it was  scraped as the environment prevented files mounting to containers and hot reloading.
+Initially, a new Docker feature called "Dev Environments" was used but it was  scraped as the environment prevented files mounting to containers and hot reloading.
 
 
 \subsubsection{Week 4 - Setting up CI/CD system }
@@ -142,7 +150,7 @@ Prometheus with Grafana is considered the most popular choice in the industry \f
 
 FastAPI is both multi-threaded and stateless which excludes the ability to have a global state. Storing the total http calls would only pertain to the current thread. This was solved by storing the value in Redis. This was done in an asynchronous way that wouldn't impact performance. 
 
-We audited our partner groups website and created issues for known issues that were discovered \footnote{\url{https://github.com/organizationGB/DevOps/issues/23}} \footnote{\url{https://github.com/organizationGB/DevOps/issues/25}}. 
+We audited our partner groups website and created issues for issues that were discovered \footnote{\url{https://github.com/organizationGB/DevOps/issues/23}} \footnote{\url{https://github.com/organizationGB/DevOps/issues/25}}. 
 
 \subsubsection{Week 7 - Maintainability, external code analysing }
 
@@ -156,7 +164,7 @@ The provided guide \footnote{https://github.com/itu-devops/itu-minitwit-logging}
     \item Adjustment of versions were required from the provided guide 
     \item Poor support for encoding custom user credentials in Kibana and Elastic Search.
     \item User credentials on Filebeat had to be manually hard coded.
-    \item With regards to security it was difficult to enable for each service 
+    \item There was little documentation on what security features have to enabled in Production
     \item Any change could only be tested in production given our setup.
 \end{itemize}
 
@@ -172,6 +180,8 @@ Metasploit and OWASP ZAP scans revealed minor vulnerabilities relating to missin
 \footnote{\url{https://github.com/MinitwitGroupI/MiniTwit/blob/main/docs/security\%20report/ZAP\%20Scanning\%20Report_1.pdf}}. 
 
 The idea of integrating OWASP ZAP to the CI/CD pipeline was considered but dismissed on grounds of being beyond the scope.
+
+A Lynis scan was carried out on the server which resulted in setting up Fail2ban. 
 
 A security assessment was performed on our partner group. See Appendix section  \ref{appendix:securityAssessment}.\footnote{\url{https://github.com/MinitwitGroupI/MiniTwit/blob/main/docs/security\%20report/Group\%20I\%20\%20-\%20Security\%20Assessment\%20Findings\%20Report.pdf}}
 
@@ -236,7 +246,7 @@ CONTRIBUTE.md explains the structure of the repository and our expectations for 
 
 \subsection{Branching strategy}
 
-We use the feature branches strategy for individual development. For releases \footnote{https://github.com/MinitwitGroupI/MiniTwit/releases} we achieved trunk based development by pushing into main and manually bundling releases. In order to push to main, we had setup branch protection that require pull requests to be reviewed by at least one other team members, with the goal to attach anyone that would be involved with the task. Our branching philosophy is described here \footnote{https://github.com/MinitwitGroupI/MiniTwit/blob/main/docs/CONTRIBUTE.md}.
+We use the feature branches strategy. For releases \footnote{https://github.com/MinitwitGroupI/MiniTwit/releases} we achieved trunk based development by pushing into main and manually bundling releases. In order to push to main, we had setup branch protection that require pull requests to be reviewed by at least one other team members, with the goal to attach anyone that would be involved with the task. Our branching philosophy is described here \footnote{https://github.com/MinitwitGroupI/MiniTwit/blob/main/docs/CONTRIBUTE.md}.
 
 \subsection{Monitoring}
 
@@ -329,7 +339,7 @@ Considering the small team and constant change in weekly tasks this was not a co
 
 \subsection{Ways we are not DevOps}
 
-We have not focused on anything relating to the Toyota Kata and seeing our development as a value stream that could contain waste. 
+We have not focused on anything relating to the Toyota Kata\footnote{ The DevOps Handbook. Page 6-8.} and seeing our development as a value stream that could contain waste. 
 
 While Github Issues were created for features, ad hoc tasks such as hot fixes were not, which breaks the principle of making work visible. 
 
@@ -339,9 +349,9 @@ While Github Issues were created for features, ad hoc tasks such as hot fixes we
 
 We each carved out our niche based on prior knowledge. PR reviews were intended for knowledge sharing but had its limitations. We tried to amend this by creating good documentation in our repository for each other, but some of the non-standard solutions meant that a larger effort was required for role shifting.  
 
-\subsubsection{Keep Pushing Quality Closer to the Source}
+\subsubsection{Pushing Quality Closer to the Source}
 
-SonarQube and CodeClimate were added and integrated with our repository, but ultimately ignored, because the warnings given were mostly irrelevant. Likewise, we had set up linting but it was ignored as it was implemented late in the development cycle. We should've created a pre-commit hook that didn't allow pushing before all linting passes. 
+SonarQube and CodeClimate were added and integrated with our repository, but ultimately ignored, because the warnings given were mostly non-applicable to the application. Likewise, we had set up linting but it was ignored as it was implemented late in the development cycle. We should've created a pre-commit hook that didn't allow pushing before all linting passes. 
 
 \subsubsection{Reduce Batch Sizes}
 
@@ -405,9 +415,9 @@ We reflect on how much we adhere to DevOps principles in \ref{DevOpsPrinciplesSe
 
 In other university courses, there's not a big focus on team collaboration, so we entered the project without a baseline on how to work together.
 
-We had hoped that PRs would ensure a high code quality, but with no prior experience with the technologies we couldn't ensure a high standard was maintained. This let to the "lgtm" (looks good to me) syndrome.
+We had hoped that PRs would ensure a high code quality, but with no prior experience with the technologies and obligations from other courses, we couldn't ensure a high standard was maintained. This let to the "lgtm" (looks good to me) syndrome.
 
-Optimally we should have had a test environment as well as a production environment. Some changes were unpredictable when tested locally, and when pushed into production, sometimes caused the application to go down. Ensuring a test environment would have helped to mitigate this issue.
+Optimally we should have had a test environment as well as a production environment. Some changes would have unpredictable interactions only when deployed to production and as result would cause downtime.  Ensuring a test environment would have helped to mitigate this issue.
 
 Before implementing CD we had a pull-based approach of the weekly release that would frequently break. Pinpointing the issue would mean having to go through all the commits which caused a long MTTR (mean time to repair). 
 
@@ -422,7 +432,7 @@ We consider that no further maintenance is required. If a new group were to inhe
 
 \section{Conclusion}
 
-We have listed many technologies and tools that are typical of DevOps project. In isolation they do not make our work DevOps. Instead it is in the way they flow seamlessly to provide Continuous Delivery and Continuous Feedback as part of The DevOps Way. We have also reviewed our team work through the lense of DevOps as a culture. We have reflected on possible improvement in how we work as a team as well as split up our commits in smaller batch sizes. Overall, we can conclude that our approach to the project has adhered to the principles of DevOps. 
+We have listed many technologies and tools that are typical of DevOps project. In isolation they do not make our work "DevOps". Instead it is in the way they flow seamlessly to provide Continuous Delivery and Continuous Feedback as part of The DevOps Way. We have also reviewed our team work through the lense of DevOps as a culture. We have reflected on possible improvement in how we work as a team as well as split up our commits in smaller batch sizes. Overall, we can conclude that our approach to the project has adhered to the principles of DevOps. 
 
 
 \input{appendix}
