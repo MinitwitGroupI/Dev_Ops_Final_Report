@@ -42,7 +42,7 @@ Domain: \url{https://opsdev.gg}
 
 \section{Problem formulation}
 
-We have inherited a legacy system called Minitwit and have been tasked with refactoring it. Besides modernizing the stack it has been our aim to do so using DevOps methodologies. By reflecting on select few pillars of DevOps the final question becomes whether or not we achieved this goal; is what we've done DevOps?
+We have inherited a legacy system called Minitwit and have been tasked with refactoring it. Besides modernizing the stack, it has been our aim to do so using DevOps methodologies. By reflecting on select few pillars of DevOps the final question becomes whether or not we achieved this goal; is what we've done DevOps?
 
 \section{System's Perspective} 
 
@@ -97,7 +97,7 @@ Languages:
 
 \subsection{State of the system}
 
-The application is accessible on \url{https://opsdev.gg}. See Appendix section  \ref{appendix:currentState} for current state of the application. The code can be found in \href{https://github.com/MinitwitGroupI/MiniTwit}{this repository}. Everything is running without error and will be accessible until the date June 14th 2023.
+The application is accessible on \url{https://opsdev.gg}. See Appendix section  \ref{appendix:currentState} for current view of the application. The code can be found in \href{https://github.com/MinitwitGroupI/MiniTwit}{this repository}. Everything is running without error and will be accessible until the date June 14th 2023.
 Our system has been able to process at least 12.778.829 \footnote{\url{http://opsdev.gg:3000/d/DVJQxp-4k/minitwit-responses?orgId=1&viewPanel=2}} events in the span of 8 weeks.
 
 \subsection{Licences}
@@ -141,7 +141,7 @@ Fetching secrets between Github Actions and Ansible were initially solved by cre
 
 \subsubsection{Week 5 - ORM }
 
-Three ORMs have been considered and the arguments are mapped \footnote{\url{https://docs.google.com/document/d/1EOrFKD0XFW5gxv1NycgtTuj9rO6dggau99LybLYIRq0/edit\#heading=h.auxry4rgtrx1}}. A benchmark repository was created \footnote{\url{https://github.com/MinitwitGroupI/ORM_Benchmarks }} and after a Github Discussion \footnote{\url{https://github.com/MinitwitGroupI/MiniTwit/discussions/57 }} a vote was held. The choice fell on the most popular choice for Python - SQLAlchemy - which did not cause any notable issues. 
+Three ORMs have been considered and the arguments are mapped \footnote{\url{https://docs.google.com/document/d/1EOrFKD0XFW5gxv1NycgtTuj9rO6dggau99LybLYIRq0/edit\#heading=h.auxry4rgtrx1}}. A benchmark repository was created \footnote{\url{https://github.com/MinitwitGroupI/ORM_Benchmarks }} and after a Github Discussion \footnote{\url{https://github.com/MinitwitGroupI/MiniTwit/discussions/57 }} a vote was held. The choice fell on the most popular choice for Python - SQLAlchemy - which did not cause any notable issues during implementation. 
 
 \subsubsection{Week 6 - Monitoring }
 
@@ -154,7 +154,7 @@ We audited our partner groups website and created issues for issues that were di
 
 \subsubsection{Week 7 - Maintainability, external code analysing }
 
-The Flake8 linter used by pylint does static code analysis in our CI pipeline to provide soft feedback that does that only blocks builds if there is any problems that would cause a crash, otherwise it provides hints on ways to improve current coding style. SonarQube and CodeClimate integrated perfectly with our repository but gave vastly different views on code quality than anticipated. It required manually dismissing a lot of warnings about duplicated code which existed in our unit tests and provided several false positives that had to be dismissed. It ended up being a burden rather than helpful.
+The Flake8 linter used by pylint does static code analysis in our CI pipeline that only blocks builds if there is any problems that would cause a crash, otherwise it provides hints on ways to improve current coding style. SonarQube and CodeClimate integrated perfectly with our repository but gave vastly different views on code quality than anticipated. It required manually dismissing a lot of warnings about duplicated code which existed in our unit tests and provided several false positives that had to be dismissed. It ended up being a burden rather than helpful.
 
 \subsubsection{Week 8 - EFK stack}
 
@@ -181,7 +181,7 @@ Metasploit and OWASP ZAP scans revealed minor vulnerabilities relating to missin
 
 The idea of integrating OWASP ZAP to the CI/CD pipeline was considered but dismissed on grounds of being beyond the scope.
 
-A Lynis scan was carried out on the server which resulted in setting up Fail2ban. 
+A Lynis scan was carried out on the server which resulted in setting up Fail2ban. The default settings were used for Fail2ban.
 
 A security assessment was performed on our partner group. See Appendix section  \ref{appendix:securityAssessment}.\footnote{\url{https://github.com/MinitwitGroupI/MiniTwit/blob/main/docs/security\%20report/Group\%20I\%20\%20-\%20Security\%20Assessment\%20Findings\%20Report.pdf}}
 
@@ -216,7 +216,7 @@ UI tests can be located in minitwit\_old\_test.py which test out the functionali
 
 For a pull request to be merged, it must successfully pass all unit and integration tests.
 \begin{figure}[h]
-    \includegraphics[width=0.4\textwidth]{images/Lint-and-test_Pipeline.png}
+    \includegraphics[width=0.4\textwidth]{images/Test_pipeline.png}
     \label{fig:ci_pipeline}
     \centering
     \caption{Lint and test pipeline}
@@ -317,7 +317,7 @@ Going by the DevOps Handbook \cite{devopshandbook} we have chosen a couple defin
 
 \subsubsection{Feedback}
 
-See Problems as They Occur: 
+See Problems as they occur: 
 
 \begin{enumerate}
     \item We set up monitoring and logging.
@@ -403,7 +403,7 @@ Thanks to our monitoring we picked up on some infrequent outages. We could not v
 \begin{enumerate}
     \item Outage during deployment while the Docker image was pulled and started. This was solved by our high-availability setup. 
     \item An initial misconfiguration of heartbeat caused CPU over provisioning and huge latency issues.
-    \item The daily 5 AM outage. Through research we discovered that PostgreSQL by default restarts and does garbage collection and other maintenance. 
+    \item The daily 5 AM outage. Through research we discovered that PostgreSQL by default restarts at a certain time during which it does garbage collection and other maintenance. 
 \end{enumerate}
 
 Overall we felt that a minimal amount of maintenance is needed and would confidently hand over the project to another team. 
