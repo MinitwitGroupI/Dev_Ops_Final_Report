@@ -56,7 +56,7 @@ A deployment view was created to help illustrate how these components are deploy
     \includegraphics[width=1\textwidth]{images/DeploymentView2.0.jpg}
     \label{fig:ci_pipeline}
     \centering
-    \caption{Component Diagram}
+    \caption{Deployment view Diagram}
 \end{figure}
 
 
@@ -97,7 +97,7 @@ Languages:
 
 \subsection{State of the system}
 
-The application is accessible on \url{https://opsdev.gg}. The code can be found in \href{https://github.com/MinitwitGroupI/MiniTwit}{this repository}. Everything is running without error and will be accessible until the date June 14th 2023.
+The application is accessible on \url{https://opsdev.gg}. See Appendix section  \ref{appendix:currentState} for current state of the application. The code can be found in \href{https://github.com/MinitwitGroupI/MiniTwit}{this repository}. Everything is running without error and will be accessible until the date June 14th 2023.
 Our system has been able to process at least 12.778.829 \footnote{\url{http://opsdev.gg:3000/d/DVJQxp-4k/minitwit-responses?orgId=1&viewPanel=2}} events in the span of 8 weeks.
 
 \subsection{Licences}
@@ -121,7 +121,7 @@ We experienced some unexpected downsides to FastAPI:
 \begin{itemize}
     \item The implementation of redirection for redirecting from a POST to another POST request would mean the loss of the original body and no way to pass it along. 
     \item Redirecting between different routes would return different status codes which created an unexpected challenge.
-    \item Since it is multi-threaded server it excludes the ability to have a global state and a session. We solved it with Starlette Session but still caused limitations in regards to combining it with middleware.
+    \item Since it is a multi-threaded server, it excludes the ability to have a global state and a session. We solved it with Starlette Session but still caused limitations in regards to combining it with middleware.
     \item The tests required to be translated to Starlette framework in order to be utilised.
 \end{itemize}
 
@@ -205,7 +205,7 @@ A Github organisation \href{https://github.com/MinitwitGroupI/}{MinitwitGroupI} 
 
 \subsection{Stages and tools utilized in CI/CD chains}
 
-We use GitHub Actions for performing all CI/CD operations.
+We use GitHub Actions for performing all CI/CD operations to our staging and production servers.
 
 \subsubsection{Continuous Integration (CI)}
 
@@ -271,7 +271,7 @@ Postman runs daily on the production frontend and sends emails if anything is do
 
 For logging we use the EFK stack. The Kibana dashboard can be found on \url{http://opsdev.gg:5601} with the username \emph{helgeandmircea} and password \emph{sesame0uvr3toi}. 
 
-We aggregate multiline logs into a single log in FileBeat and filter them inside Kibana using several regex filters. The dashboards were created using Kibana's dashboard visualization tool. Appendix \ref{appendix:loggingDashboard} shows an overview.
+We aggregate multi line logs into a single log in FileBeat and filter them inside Kibana using several regex filters. The dashboards were created using Kibana's dashboard visualization tool. Appendix \ref{appendix:loggingDashboard} shows an overview.
 
 
 \subsection{Security Assessment}
@@ -378,7 +378,7 @@ In conclusion, we could've approached the larger tasks in smaller batches.
 
 DevOps has enjoyed many different views through different eras \cite{devopsviewsthrougheras}. The Phoenix Project \cite{thephoenixproject} focuses on DevOps as a culture. One important concept should be psychological safety.
 
-It took time for us to align expectations. During this period we had to agree on the technology stack which felt like a popularity contest for the best framework. In the following weeks however, everyone became really helpful and Discord calls occurred in random constellations. We picked up the term "psychological safety" from the guest lecture and repeated it as a mantra in our group.
+It took time for us to align expectations. During this period we had to agree on the technology stack which felt like a popularity contest for the best framework. In the following weeks however, everyone became really helpful and Discord calls occurred in random permutations. We picked up the term psychological safety from the guest lecture and repeated it as a mantra in our group.
 
 \section{Lessons Learned Perspective}
 
@@ -390,20 +390,20 @@ Picking FastAPI resulted in significantly less time spent on refactoring which a
 
 \subsubsection{Evolution}
 
-We were often blocked by upcoming tasks. Testing required implementing the ORM to mock a similar database setup as the one in production. We couldn't implement CI without tests and CD required CI to be done. 
+We were often blocked by parallel tasks. Testing required implementing the ORM to mock a similar database setup as the one in production. We couldn't implement CI without tests and CD required CI to be done. 
 
 In retrospect it's difficult to say if there is a better path to complete the project. It has become apparent to us which tasks were of the highest priority and that other tasks depended on. 
 
 \subsubsection{Maintenance}
 
-We have estimated the likely uptime based on Postman monitors and our monitoring dashboard and used the metrics in our SLA\footnote{https://github.com/MinitwitGroupI/MiniTwit/blob/main/docs/SLA.md}. 
+We have estimated the likely up time based on Postman monitors and our monitoring dashboard and used the metrics in our SLA\footnote{https://github.com/MinitwitGroupI/MiniTwit/blob/main/docs/SLA.md}. 
 
 Thanks to our monitoring we picked up on some infrequent outages. We could not verify whether some were caused by the simulator pausing or a problem on our end. We experienced at least three types of known outages:
 
 \begin{enumerate}
     \item Outage during deployment while the Docker image was pulled and started. This was solved by our high-availability setup. 
-    \item An initial misconfiguration of heartbeat caused CPU overprovisioning and huge latency issues.
-    \item The daily 5 AM outage. Through research we discovered that PostgreSQL by default restarts and does garbage collection and other maintanance. 
+    \item An initial misconfiguration of heartbeat caused CPU over provisioning and huge latency issues.
+    \item The daily 5 AM outage. Through research we discovered that PostgreSQL by default restarts and does garbage collection and other maintenance. 
 \end{enumerate}
 
 Overall we felt that a minimal amount of maintenance is needed and would confidently hand over the project to another team. 
@@ -415,7 +415,7 @@ We reflect on how much we adhere to DevOps principles in \ref{DevOpsPrinciplesSe
 
 In other university courses, there's not a big focus on team collaboration, so we entered the project without a baseline on how to work together.
 
-We had hoped that PRs would ensure a high code quality, but with no prior experience with the technologies and obligations from other courses, we couldn't ensure a high standard was maintained. This let to the "lgtm" (looks good to me) syndrome.
+We had hoped that PRs would ensure a high code quality, but with no prior experience with the technologies and obligations from other courses, we couldn't ensure a high standard was maintained. This let to the "LGTM" (looks good to me) syndrome.
 
 Optimally we should have had a test environment as well as a production environment. Some changes would have unpredictable interactions only when deployed to production and as result would cause downtime.  Ensuring a test environment would have helped to mitigate this issue.
 
@@ -428,11 +428,11 @@ It would've been nice to automate the infrastructure. Right now deploying from s
 
 \subsection{Hand over}
 
-We consider that no further maintenance is required. If a new group were to inherit our codebase, we have created a document to guide them. See Appendix section \ref{appendix:handOverGuide}. 
+We consider that no further maintenance is required. If a new group were to inherit our code base, we have created a document to guide them. See Appendix section \ref{appendix:handOverGuide}. 
 
 \section{Conclusion}
 
-We have listed many technologies and tools that are typical of DevOps project. In isolation they do not make our work "DevOps". Instead it is in the way they flow seamlessly to provide Continuous Delivery and Continuous Feedback as part of The DevOps Way. We have also reviewed our team work through the lense of DevOps as a culture. We have reflected on possible improvement in how we work as a team as well as split up our commits in smaller batch sizes. Overall, we can conclude that our approach to the project has adhered to the principles of DevOps. 
+We have listed many technologies and tools that are typical of DevOps project. In isolation they do not make our work "DevOps". Instead it is in the way they flow seamlessly together to provide Continuous Delivery and Continuous Feedback as part of The DevOps Way. We have also reviewed our team work through the lens of DevOps as a culture. We have reflected on possible improvement in how we work as a team as well as split up our commits in smaller batch sizes. Overall, we can conclude that our approach to the project has adhered to the principles of DevOps. 
 
 
 \input{appendix}
